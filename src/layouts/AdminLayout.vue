@@ -213,6 +213,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
+
+const auth = useAuthStore()
+const router = useRouter()
 
 const route = useRoute()
 const sidebarCollapsed = ref(false)
@@ -227,9 +232,10 @@ const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
-const handleLogout = () => {
-  console.log('Logging out...')
+const handleLogout = async () => {
   dropdownOpen.value = false
+  await auth.logout()
+  router.push({ name: 'login' })
 }
 
 const handleClickOutside = (event: Event) => {
@@ -260,4 +266,6 @@ const pageTitle = computed(() => {
       return 'Dashboard'
   }
 })
+
+
 </script>
