@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen flex flex-col lg:flex-row">
         <!-- Left side -->
-        <div class="flex-1 relative bg-gradient-to-br from-indigo-900 to-indigo-800 min-h-[30vh] lg:min-h-screen">
+        <div class="flex-1 relative bg-gradient-to-br from-blue-500 to-indigo-800 min-h-[30vh] lg:min-h-screen">
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
                 style="background-image: url('/images/bg2k.webp')"></div>
             <div
@@ -59,7 +59,7 @@
 
 
                     <button type="submit" :disabled="isLoading"
-                        class="w-full bg-indigo-600 text-white py-3 sm:py-4 px-4 rounded-lg font-medium text-base hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation active:bg-indigo-800 min-h-[48px]">
+                        class="w-full bg-emerald-400 text-white py-3 sm:py-4 px-4 rounded-lg font-medium text-base hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation active:bg-indigo-800 min-h-[48px]">
                         <span v-if="isLoading" class="flex items-center justify-center">
                             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
