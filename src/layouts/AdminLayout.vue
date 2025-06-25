@@ -49,10 +49,10 @@
           <!-- Dashboard Nav -->
           <div class="relative">
             <RouterLink to="/admin"
-              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-600/20 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-500/30"
+              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600/30 text-white shadow-lg border-emerald-400/50"
-              exact-active-class="bg-emerald-600/30 text-white shadow-lg border-emerald-400/50">
+              active-class="bg-emerald-600 text-white border-emerald-500"
+              exact-active-class="bg-emerald-600 text-white border-emerald-500">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,7 +60,7 @@
                   </path>
                 </svg>
               </div>
-              <span v-if="!sidebarCollapsed" class="ml-4 font-medium transition-opacity duration-300 truncate">
+              <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
                 Dashboard
               </span>
             </RouterLink>
@@ -73,16 +73,16 @@
           <!-- Registration Nav -->
           <div class="relative">
             <RouterLink to="/admin/registration"
-              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-600/20 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-500/30"
+              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600/30 text-white shadow-lg border-emerald-400/50">
+              active-class="bg-emerald-600 text-white border-emerald-500">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                 </svg>
               </div>
-              <span v-if="!sidebarCollapsed" class="ml-4 font-medium transition-opacity duration-300 truncate">
+              <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
                 Registration
               </span>
             </RouterLink>
@@ -95,9 +95,9 @@
           <!-- Settings Nav -->
           <div class="relative">
             <RouterLink to="/admin/settings"
-              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-600/20 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-500/30"
+              class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600/30 text-white shadow-lg border-emerald-400/50">
+              active-class="bg-emerald-600 text-white border-emerald-500">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,7 +107,7 @@
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
               </div>
-              <span v-if="!sidebarCollapsed" class="ml-4 font-medium transition-opacity duration-300 truncate">
+              <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
                 Settings
               </span>
             </RouterLink>
@@ -123,7 +123,7 @@
       <div class="p-3 border-t border-slate-700">
         <div class="relative">
           <button @click="handleLogout"
-            class="w-full flex items-center text-slate-300 rounded-xl hover:bg-red-600/20 hover:text-red-300 transition-all duration-300 group border border-transparent hover:border-red-500/30 cursor-pointer"
+            class="w-full flex items-center text-slate-300 rounded-xl hover:bg-red-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-red-600 cursor-pointer"
             :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'">
             <div class="relative">
               <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
               </svg>
             </div>
-            <span v-if="!sidebarCollapsed" class="ml-4 font-medium transition-opacity duration-300 truncate">
+            <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
               Logout
             </span>
           </button>
@@ -146,7 +146,7 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <header
-        class="bg-gradient-to-r from-emerald-600 to-emerald-700 shadow-lg border-b border-emerald-800 flex-shrink-0">
+        class="bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg border-emerald-800 flex-shrink-0">
         <div class="px-6 py-3 flex items-center justify-between">
           <h2 class="text-2xl font-bold text-white tracking-wide">
             {{ pageTitle }}
@@ -266,6 +266,4 @@ const pageTitle = computed(() => {
       return 'Dashboard'
   }
 })
-
-
 </script>

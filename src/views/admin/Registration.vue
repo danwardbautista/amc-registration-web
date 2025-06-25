@@ -27,11 +27,24 @@
             </div>
           </div>
           <button @click="openAddModal"
-            class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer">
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer">
             <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
             Add Registrant
+          </button>
+        </div>
+        
+        <!-- Column Visibility Button -->
+        <div class="mt-4">
+          <button 
+            @click="isColumnModalOpen = true"
+            class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer"
+          >
+            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+            </svg>
+            Edit Columns
           </button>
         </div>
       </div>
@@ -56,7 +69,7 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.first_name" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('first_name')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>First Name</span>
@@ -68,7 +81,7 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.last_name" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('last_name')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>Last Name</span>
@@ -80,7 +93,7 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.email" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('email')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>Email</span>
@@ -92,7 +105,7 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.mobile_number" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('mobile_number')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>Mobile Number</span>
@@ -104,7 +117,7 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.created_at" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('created_at')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>Registration Date</span>
@@ -116,7 +129,7 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.updated_at" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <button @click="sortByColumn('updated_at')"
                     class="flex items-center space-x-1 hover:text-gray-700 cursor-pointer">
                     <span>Last Updated</span>
@@ -128,16 +141,21 @@
                     </svg>
                   </button>
                 </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th v-if="columnVisibility.actions" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="registrant in registrationStore.registrants" :key="registrant.id"
-                class="hover:bg-gray-50 transition-colors">
+                :class="[
+                  'transition-all duration-300',
+                  recentlyEditedId === registrant.id 
+                    ? 'ring-2 ring-green-400 bg-green-50 shadow-sm' 
+                    : 'hover:bg-gray-50'
+                ]">
                 <!-- First Name Col -->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.first_name" class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-semibold text-gray-900">
                     {{ registrant.first_name }}
                   </div>
@@ -147,7 +165,7 @@
                 </td>
 
                 <!-- Last Name Col -->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.last_name" class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-semibold text-gray-900">
                     {{ registrant.last_name }}
                   </div>
@@ -157,7 +175,7 @@
                 </td>
 
                 <!-- Email Col -->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.email" class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center text-sm text-gray-900">
                     <svg class="flex-shrink-0 mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
                       viewBox="0 0 24 24">
@@ -169,7 +187,7 @@
                 </td>
 
                 <!-- Mobile Number Col-->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.mobile_number" class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center text-sm text-gray-900">
                     <svg class="flex-shrink-0 mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
                       viewBox="0 0 24 24">
@@ -181,7 +199,7 @@
                 </td>
 
                 <!-- Registration Date Col -->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.created_at" class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-900">
                     {{ formatDateTime(registrant.created_at) }}
                   </div>
@@ -191,7 +209,7 @@
                 </td>
 
                 <!-- Last Updated Col -->
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="columnVisibility.updated_at" class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-900">
                     {{ formatDateTime(registrant.updated_at) }}
                   </div>
@@ -201,7 +219,7 @@
                 </td>
 
                 <!-- Actions Col -->
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td v-if="columnVisibility.actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center space-x-2">
                     <button @click="editRegistrant(registrant.id)"
                       class="inline-flex items-center px-3 py-1.5 border border-indigo-300 rounded-md text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer">
@@ -211,8 +229,8 @@
                       </svg>
                       Edit
                     </button>
-                    <button @click="deleteRegistrant(registrant.id)"
-                      class="inline-flex items-center px-3 py-1.5 border border-red-300 rounded-md text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                    <button @click="confirmDelete(registrant)"
+                      class="inline-flex items-center px-3 py-1.5 border border-red-300 rounded-md text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors cursor-pointer">
                       <svg class="mr-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -238,7 +256,7 @@
           </p>
           <div class="mt-6">
             <button @click="openAddModal"
-              class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer">
+              class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer">
               <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -251,27 +269,48 @@
         <div v-if="registrationStore.pagination && registrationStore.pagination.last_page > 1"
           class="bg-white px-6 py-4 border-t border-gray-200">
           <div class="flex items-center justify-between">
-            <div class="flex items-center text-sm text-gray-700">
-              <span>
-                Showing {{ registrationStore.pagination.from }} to {{ registrationStore.pagination.to }}
-                of {{ registrationStore.pagination.total }} results
-              </span>
+            <div class="flex items-center space-x-6">
+              <!-- Results info -->
+              <div class="flex items-center text-sm text-gray-700">
+                <span>
+                  Showing {{ registrationStore.pagination.from }} to {{ registrationStore.pagination.to }}
+                  of {{ registrationStore.pagination.total }} results
+                </span>
+              </div>
+              
+              <!-- Per page selector -->
+              <div class="flex items-center space-x-2">
+                <label for="per-page" class="text-sm text-gray-700">Show:</label>
+                <select 
+                  id="per-page"
+                  v-model="perPage" 
+                  @change="changePerPage(perPage)"
+                  class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer"
+                >
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+                <span class="text-sm text-gray-700">per page</span>
+              </div>
             </div>
+            
+            <!-- Pagination controls -->
             <div class="flex items-center space-x-2">
               <button @click="goToPage(currentPage - 1)" :disabled="currentPage <= 1" :class="[
                 'px-3 py-2 rounded-md text-sm font-medium transition-colors',
                 currentPage <= 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  : 'text-gray-700 hover:bg-gray-50 border border-gray-300 cursor-pointer'
               ]">
                 Previous
               </button>
 
               <template v-for="page in paginationPages" :key="page">
                 <button v-if="page !== '...'" @click="goToPage(page as number)" :class="[
-                  'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer',
                   page === currentPage
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-emerald-500 text-white'
                     : 'text-gray-700 hover:bg-gray-50 border border-gray-300'
                 ]">
                   {{ page }}
@@ -284,7 +323,7 @@
                   'px-3 py-2 rounded-md text-sm font-medium transition-colors',
                   currentPage >= registrationStore.pagination.last_page
                     ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-gray-50 border border-gray-300'
+                    : 'text-gray-700 hover:bg-gray-50 border border-gray-300 cursor-pointer'
                 ]">
                 Next
               </button>
@@ -297,6 +336,28 @@
     <!-- Registrant Modal -->
     <RegistrantModal ref="modalRef" :is-open="isModalOpen" :registrant="currentEditingRegistrant"
       :loading="registrationStore.loading" @close="closeModal" @submit="handleModalSubmit" />
+
+    <!-- Confirmation Dialog -->
+    <ConfirmationDialog
+      :is-open="isDeleteDialogOpen"
+      :title="deleteDialogTitle"
+      :message="deleteDialogMessage"
+      :loading="deleteLoading"
+      type="danger"
+      confirm-text="Delete"
+      cancel-text="Cancel"
+      @confirm="handleDeleteConfirm"
+      @cancel="handleDeleteCancel"
+    />
+
+    <!-- Column Visibility Modal -->
+    <ColumnVisibilityModal
+      :is-open="isColumnModalOpen"
+      :columns="availableColumns"
+      :visibility="columnVisibility"
+      @close="isColumnModalOpen = false"
+      @update="updateColumnVisibility"
+    />
   </div>
 </template>
 
@@ -304,7 +365,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRegistrationStore } from '../../stores/registration'
 import RegistrantModal from '../../components/RegistrantModal.vue'
+import ConfirmationDialog from '../../components/ConfirmationDialog.vue'
+import ColumnVisibilityModal from '../../components/ColumnVisibilityModal.vue'
 import type { RegistrantForm, Registrant } from '../../stores/registration'
+import type { TableColumn } from '../../components/ColumnVisibilityModal.vue'
 
 const registrationStore = useRegistrationStore()
 
@@ -313,11 +377,61 @@ const hasSearched = ref(false)
 const sortBy = ref('created_at')
 const sortOrder = ref<'asc' | 'desc'>('desc')
 const currentPage = ref(1)
-const perPage = ref(10)
+const perPage = ref(
+  parseInt(localStorage.getItem('registrants_per_page') || '10')
+)
 
 const isModalOpen = ref(false)
 const currentEditingRegistrant = ref<Registrant | null>(null)
 const modalRef = ref<InstanceType<typeof RegistrantModal> | null>(null)
+
+// Delete confirmation
+const isDeleteDialogOpen = ref(false)
+const registrantToDelete = ref<Registrant | null>(null)
+const deleteLoading = ref(false)
+
+// Recently edited
+const recentlyEditedId = ref<number | null>(null)
+
+// Column visibility
+const isColumnModalOpen = ref(false)
+const availableColumns: TableColumn[] = [
+  { key: 'first_name', label: 'First Name', description: 'Given name' },
+  { key: 'last_name', label: 'Last Name', description: 'Family name' },
+  { key: 'email', label: 'Email', description: 'Email address' },
+  { key: 'mobile_number', label: 'Mobile Number', description: 'Phone number' },
+  { key: 'created_at', label: 'Registration Date', description: 'When registered' },
+  { key: 'updated_at', label: 'Last Updated', description: 'Last modification' },
+  { key: 'actions', label: 'Actions', description: 'Edit/Delete buttons', required: true }
+]
+
+// Load column visibility from localStorage or set defaults
+const getInitialVisibility = (): Record<string, boolean> => {
+  const saved = localStorage.getItem('registrants_column_visibility')
+  if (saved) {
+    return JSON.parse(saved)
+  }
+  // Default show all of em
+  const defaultVisibility: Record<string, boolean> = {}
+  availableColumns.forEach(col => {
+    defaultVisibility[col.key] = true
+  })
+  return defaultVisibility
+}
+
+const columnVisibility = ref<Record<string, boolean>>(getInitialVisibility())
+
+const deleteDialogTitle = computed(() => {
+  return registrantToDelete.value 
+    ? `Delete ${registrantToDelete.value.first_name} ${registrantToDelete.value.last_name}?`
+    : 'Delete Registrant?'
+})
+
+const deleteDialogMessage = computed(() => {
+  return registrantToDelete.value
+    ? `Are you sure you want to delete ${registrantToDelete.value.first_name} ${registrantToDelete.value.last_name}? This action cannot be undone.`
+    : 'Are you sure you want to delete this registrant? This action cannot be undone.'
+})
 
 let searchTimeout: number
 const debouncedSearch = () => {
@@ -407,6 +521,13 @@ const goToPage = (page: number) => {
   }
 }
 
+const changePerPage = (newPerPage: number) => {
+  perPage.value = newPerPage
+  localStorage.setItem('registrants_per_page', newPerPage.toString())
+  currentPage.value = 1 // Reset to first page when changing per page
+  loadRegistrants()
+}
+
 const formatDateTime = (dateString: string): string => {
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
@@ -443,7 +564,6 @@ const editRegistrant = async (id: number) => {
     currentEditingRegistrant.value = existingRegistrant
     isModalOpen.value = true
   } else {
-
     const result = await registrationStore.getRegistrantById(id)
     if (result.success) {
       currentEditingRegistrant.value = result.data
@@ -462,27 +582,69 @@ const handleModalSubmit = async (formData: RegistrantForm) => {
 
   if (currentEditingRegistrant.value) {
     result = await registrationStore.updateRegistrant(currentEditingRegistrant.value.id, formData)
+    
+    // Highlight the edited row
+    if (result.success) {
+      recentlyEditedId.value = currentEditingRegistrant.value.id
+      closeModal()
+      await loadRegistrants()
+      
+      // Auto-remove highlight after 4 seconds
+      setTimeout(() => {
+        recentlyEditedId.value = null
+      }, 4000)
+    }
   } else {
     result = await registrationStore.createRegistrant(formData)
+    
+    if (result.success) {
+      closeModal()
+      await loadRegistrants()
+    }
   }
 
-  if (result.success) {
-    closeModal()
-    await loadRegistrants()
-  } else if (result.errors && modalRef.value) {
+  if (!result.success && result.errors && modalRef.value) {
     modalRef.value.setErrors(result.errors)
-
   }
 }
 
-const deleteRegistrant = async (id: number) => {
-  if (confirm('Are you sure you want to delete this registrant?')) {
-    await registrationStore.deleteRegistrant(id)
-    if (registrationStore.registrants.length === 0 && currentPage.value > 1) {
-      currentPage.value = currentPage.value - 1
+// Delete functionality
+const confirmDelete = (registrant: Registrant) => {
+  registrantToDelete.value = registrant
+  isDeleteDialogOpen.value = true
+}
+
+const handleDeleteConfirm = async () => {
+  if (!registrantToDelete.value) return
+
+  deleteLoading.value = true
+  
+  try {
+    const result = await registrationStore.deleteRegistrant(registrantToDelete.value.id)
+    
+    if (result.success) {
+      // Check if we need to go to previous page
+      if (registrationStore.registrants.length === 0 && currentPage.value > 1) {
+        currentPage.value = currentPage.value - 1
+      }
+      await loadRegistrants()
+      handleDeleteCancel() // Close dialog
     }
-    loadRegistrants()
+  } finally {
+    deleteLoading.value = false
   }
+}
+
+const handleDeleteCancel = () => {
+  isDeleteDialogOpen.value = false
+  registrantToDelete.value = null
+  deleteLoading.value = false
+}
+
+// Column visibility functions
+const updateColumnVisibility = (newVisibility: Record<string, boolean>) => {
+  columnVisibility.value = newVisibility
+  localStorage.setItem('registrants_column_visibility', JSON.stringify(newVisibility))
 }
 
 onMounted(() => {
