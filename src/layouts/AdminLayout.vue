@@ -6,7 +6,7 @@
     <div
       class="bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl transition-all duration-300 ease-in-out border-r border-slate-700 z-40"
       :class="getSidebarClasses()">
-      
+
       <!-- Sidebar Header -->
       <div class="p-4 border-b border-slate-700 flex items-center overflow-hidden relative"
         :class="sidebarCollapsed ? 'justify-center' : 'justify-between'">
@@ -55,8 +55,7 @@
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
               active-class="bg-emerald-600 text-white border-emerald-500"
-              exact-active-class="bg-emerald-600 text-white border-emerald-500"
-              @click="handleNavClick">
+              exact-active-class="bg-emerald-600 text-white border-emerald-500" @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -80,12 +79,12 @@
             <RouterLink to="/admin/registration"
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600 text-white border-emerald-500"
-              @click="handleNavClick">
+              active-class="bg-emerald-600 text-white border-emerald-500" @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 8v6m3-3h-6"></path>
                 </svg>
               </div>
               <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
@@ -104,8 +103,7 @@
             <RouterLink to="/admin/settings"
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600 text-white border-emerald-500"
-              @click="handleNavClick">
+              active-class="bg-emerald-600 text-white border-emerald-500" @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -130,28 +128,25 @@
     </div>
 
     <!-- Main Content -->
-    <div 
-      class="flex-1 flex flex-col overflow-hidden"
-      :class="getMainContentClasses()">
-      
+    <div class="flex-1 flex flex-col overflow-hidden" :class="getMainContentClasses()">
+
       <header class="bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg border-emerald-800 flex-shrink-0">
         <div class="px-6 py-3 flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <!-- Mobile hamburger menu -->
-            <button 
-              v-if="isMobile && sidebarCollapsed" 
-              @click="openSidebar"
+            <button v-if="isMobile && sidebarCollapsed" @click="openSidebar"
               class="p-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
               </svg>
             </button>
-            
+
             <h2 class="text-2xl font-bold text-white tracking-wide">
               {{ pageTitle }}
             </h2>
           </div>
-          
+
           <!-- User profile -->
           <div class="relative" ref="dropdownRef">
             <button @click="toggleDropdown"
@@ -173,18 +168,20 @@
             <div v-if="dropdownOpen"
               class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
               <div class="p-4 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="font-semibold text-slate-800">John Smith</div>
-                    <div class="text-sm text-slate-500">johnsmith@example.com</div>
-                    <div class="text-xs text-emerald-600 font-medium">Administrator</div>
+                <div class="p-4 border-b border-gray-100">
+                  <div class="flex items-center space-x-4">
+                    <div
+                      class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="font-semibold text-slate-800 truncate">Owner</div>
+                      <div class="text-sm text-slate-500 truncate">owner@danwardbautista.com</div>
+                      <div class="text-xs text-emerald-600 font-medium">Administrator</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -230,7 +227,7 @@ const isMobile = ref(false)
 const checkMobile = () => {
   const wasMobile = isMobile.value
   isMobile.value = window.innerWidth < 768
-  
+
   // If switching to mobile
   if (!wasMobile && isMobile.value) {
     sidebarCollapsed.value = true
@@ -239,30 +236,30 @@ const checkMobile = () => {
 
 const getSidebarClasses = () => {
   const baseClasses = []
-  
+
   if (sidebarCollapsed.value) {
     baseClasses.push('w-16')
   } else {
     baseClasses.push('w-64')
   }
-  
+
   if (isMobile.value) {
     baseClasses.push('fixed', 'top-0', 'left-0', 'h-full')
   } else {
     baseClasses.push('flex-shrink-0', 'relative')
   }
-  
+
   return baseClasses.join(' ')
 }
 
 // Get main content classes based on state
 const getMainContentClasses = () => {
   const baseClasses = []
-  
+
   if (isMobile.value && sidebarCollapsed.value) {
     baseClasses.push('ml-16')
   }
-  
+
   return baseClasses.join(' ')
 }
 
@@ -317,7 +314,7 @@ onUnmounted(() => {
 
 const pageTitle = computed(() => {
   const routeName = route.name as string
-  
+
   switch (routeName) {
     case 'dashboard':
       return 'Dashboard'
