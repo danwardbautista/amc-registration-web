@@ -27,12 +27,12 @@ export const useAuthStore = defineStore('auth', {
                 return { success: true }
             } catch (error: any) {
                 if (error.response?.status === 422) {
-                    toastStore.error('Validation Error', 'Please check your input')
+                    // toastStore.error('Validation Error', 'Please check your input')
                     return { success: false, errors: error.response.data.errors }
                 }
 
                 if (error.response?.status === 401) {
-                    toastStore.error('Login Failed', 'Invalid email or password')
+                    // toastStore.error('Login Failed', 'Invalid email or password')
                     return { success: false, errors: { email: [error.response.data.message] } }
                 }
 
