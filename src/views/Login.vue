@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen flex flex-col lg:flex-row">
         <!-- Left side -->
-        <div class="flex-1 relative bg-gradient-to-br from-blue-500 to-indigo-800 min-h-[30vh] lg:min-h-screen">
+        <div class="flex-1 relative bg-gradient-to-br from-blue-500 to-blue-800 min-h-[30vh] lg:min-h-screen">
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
                 style="background-image: url('/images/bg2k.webp')"></div>
             <div

@@ -118,29 +118,6 @@
           </div>
         </div>
       </nav>
-
-      <!-- Logout Nav -->
-      <div class="p-3 border-t border-slate-700">
-        <div class="relative">
-          <button @click="handleLogout"
-            class="w-full flex items-center text-slate-300 rounded-xl hover:bg-red-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-red-600 cursor-pointer"
-            :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'">
-            <div class="relative">
-              <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-              </svg>
-            </div>
-            <span v-if="!sidebarCollapsed" class="ml-4 font-semibold transition-opacity duration-300 truncate">
-              Logout
-            </span>
-          </button>
-          <div v-if="sidebarCollapsed"
-            class="absolute left-16 top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-slate-600">
-            Logout
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Main Content -->
