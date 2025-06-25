@@ -1,9 +1,9 @@
-<!-- /src/views/admin/Registration.vue (Modularized Version) -->
+<!-- /src/views/admin/Registration.vue -->
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-gray-50 py-4 sm:py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header Section -->
-      <div class="mb-8">
+      <div class="mb-6 sm:mb-8">
         <SearchBar
           v-model="searchTerm"
           :has-searched="hasSearched"
@@ -15,7 +15,7 @@
         />
         
         <!-- Column Visibility Button -->
-        <div class="mt-4">
+        <div class="mt-4 hidden md:block">
           <button 
             @click="isColumnModalOpen = true"
             class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer"
@@ -74,6 +74,7 @@
 
     <!-- Column Visibility Modal -->
     <ColumnVisibilityModal
+      v-if="!isMobileDevice"
       :is-open="isColumnModalOpen"
       :columns="availableColumns"
       :visibility="columnVisibility"
@@ -84,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRegistrationStore } from '../../stores/registration'
 import SearchBar from '../../components/SearchBar.vue'
 import RegistrantsTable from '../../components/RegistrantsTable.vue'
@@ -95,6 +96,13 @@ import type { RegistrantForm, Registrant } from '../../stores/registration'
 import type { TableColumn } from '../../components/ColumnVisibilityModal.vue'
 
 const registrationStore = useRegistrationStore()
+
+// Mobile detection
+const isMobileDevice = ref(false)
+
+const checkMobile = () => {
+  isMobileDevice.value = window.innerWidth < 768
+}
 
 // Search and pagination state
 const searchTerm = ref('')
@@ -332,6 +340,12 @@ const updateColumnVisibility = (newVisibility: Record<string, boolean>) => {
 }
 
 onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   loadRegistrants()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>

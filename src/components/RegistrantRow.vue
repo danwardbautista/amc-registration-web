@@ -1,6 +1,8 @@
 <!-- /src/components/RegistrantRow.vue -->
 <template>
+  <!-- Desktop Table Row -->
   <tr 
+    v-if="!isMobile"
     :class="[
       'transition-all duration-300',
       isRecentlyEdited 
@@ -98,9 +100,94 @@
       </div>
     </td>
   </tr>
+
+  <!-- Mobile Card Layout -->
+  <tr v-else class="block border-b border-gray-200">
+    <td class="block px-4 py-4">
+      <div 
+        :class="[
+          'bg-white rounded-lg border transition-all duration-300 p-4',
+          isRecentlyEdited 
+            ? 'border-green-400 bg-green-50 shadow-sm' 
+            : 'border-gray-200 hover:shadow-md'
+        ]"
+      >
+        <!-- Header with name and ID -->
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span v-if="registrant.prefix" class="text-sm text-gray-500">{{ registrant.prefix }}</span>
+              <h3 class="text-lg font-semibold text-gray-900">
+                {{ registrant.first_name }} {{ registrant.last_name }}
+              </h3>
+            </div>
+            <p class="text-sm text-gray-500">ID: {{ registrant.id }}</p>
+          </div>
+          
+          <!-- Mobile Actions -->
+          <div class="flex space-x-2">
+            <button 
+              @click="$emit('edit', registrant.id)"
+              class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors cursor-pointer"
+              title="Edit"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+            <button 
+              @click="$emit('delete', registrant)"
+              class="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
+              title="Delete"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="space-y-2 mb-3">
+          <div v-if="columnVisibility.email" class="flex items-center text-sm text-gray-600">
+            <svg class="flex-shrink-0 mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <a :href="`mailto:${registrant.email}`" class="hover:text-indigo-600 transition-colors">
+              {{ registrant.email }}
+            </a>
+          </div>
+          
+          <div v-if="columnVisibility.mobile_number" class="flex items-center text-sm text-gray-600">
+            <svg class="flex-shrink-0 mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <a :href="`tel:${registrant.mobile_number}`" class="hover:text-indigo-600 transition-colors">
+              {{ registrant.mobile_number }}
+            </a>
+          </div>
+        </div>
+
+        <!-- Timestamps -->
+        <div class="text-xs text-gray-500 space-y-1">
+          <div v-if="columnVisibility.created_at">
+            <span class="font-medium">Registered:</span> {{ formatDateTime(registrant.created_at) }}
+          </div>
+          <div v-if="columnVisibility.updated_at">
+            <span class="font-medium">Updated:</span> {{ formatDateTime(registrant.updated_at) }}
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
 import type { Registrant } from '../stores/registration'
 
 interface Props {
@@ -116,6 +203,22 @@ interface Emits {
 
 defineProps<Props>()
 defineEmits<Emits>()
+
+// Mobile detection
+const isMobile = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 const formatDateTime = (dateString: string): string => {
   return new Date(dateString).toLocaleString('en-US', {

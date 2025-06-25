@@ -15,16 +15,54 @@
     </div>
 
     <!-- Table Content -->
-    <div v-else-if="registrants.length > 0" class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <TableHeader
-          :columns="tableColumns"
-          :column-visibility="columnVisibility"
-          :sort-by="sortBy"
-          :sort-order="sortOrder"
-          @sort="$emit('sort', $event)"
-        />
-        <tbody class="bg-white divide-y divide-gray-200">
+    <div v-else-if="registrants.length > 0">
+      <!-- Desktop Table -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <TableHeader
+            :columns="tableColumns"
+            :column-visibility="columnVisibility"
+            :sort-by="sortBy"
+            :sort-order="sortOrder"
+            @sort="$emit('sort', $event)"
+          />
+          <tbody class="bg-white divide-y divide-gray-200">
+            <RegistrantRow
+              v-for="registrant in registrants"
+              :key="registrant.id"
+              :registrant="registrant"
+              :column-visibility="columnVisibility"
+              :is-recently-edited="recentlyEditedId === registrant.id"
+              @edit="$emit('edit', $event)"
+              @delete="$emit('delete', $event)"
+            />
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile List View -->
+      <div class="md:hidden">
+        <!-- Mobile Sort Controls -->
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700">Sort by:</span>
+            <select 
+              :value="`${sortBy}-${sortOrder}`"
+              @change="handleMobileSort"
+              class="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer"
+            >
+              <option value="created_at-desc">Newest First</option>
+              <option value="created_at-asc">Oldest First</option>
+              <option value="first_name-asc">Name A-Z</option>
+              <option value="first_name-desc">Name Z-A</option>
+              <option value="email-asc">Email A-Z</option>
+              <option value="email-desc">Email Z-A</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="divide-y divide-gray-200">
           <RegistrantRow
             v-for="registrant in registrants"
             :key="registrant.id"
@@ -34,8 +72,8 @@
             @edit="$emit('edit', $event)"
             @delete="$emit('delete', $event)"
           />
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
 
     <!-- Empty State -->
@@ -91,7 +129,7 @@ interface Emits {
 }
 
 const props = defineProps<Props>()
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 const tableColumns: TableColumn[] = [
   { key: 'first_name', label: 'First Name', sortable: true },
@@ -116,4 +154,19 @@ const emptyDescription = computed(() => {
 const emptyAddButtonText = computed(() => {
   return props.searchTerm ? 'Add Registrant' : 'Add First Registrant'
 })
+
+const handleMobileSort = (event: Event) => {
+  const value = (event.target as HTMLSelectElement).value
+  const [column, order] = value.split('-')
+  
+  // First emit sort for column to set it
+  emit('sort', column)
+  
+  // Then emit again if order doesn't match to flip it
+  setTimeout(() => {
+    if (props.sortOrder !== order) {
+      emit('sort', column)
+    }
+  }, 0)
+}
 </script>

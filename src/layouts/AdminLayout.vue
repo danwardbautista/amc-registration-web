@@ -1,9 +1,12 @@
 <template>
   <div class="flex h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+
+
     <!-- Sidebar -->
     <div
-      class="bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl flex-shrink-0 transition-all duration-300 ease-in-out border-r border-slate-700 relative"
-      :class="sidebarCollapsed ? 'w-16' : 'w-64'">
+      class="bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl transition-all duration-300 ease-in-out border-r border-slate-700 z-40"
+      :class="getSidebarClasses()">
+      
       <!-- Sidebar Header -->
       <div class="p-4 border-b border-slate-700 flex items-center overflow-hidden relative"
         :class="sidebarCollapsed ? 'justify-center' : 'justify-between'">
@@ -36,8 +39,8 @@
       </div>
 
       <!-- Toggle collapsed -->
-      <button v-if="sidebarCollapsed" @click="toggleSidebar"
-        class="absolute top-4 -right-4 transform p-2 rounded-lg bg-slate-700 hover:bg-emerald-600 transition-all duration-300 hover:scale-105 shadow-lg border border-slate-600 hover:border-emerald-500 z-50 cursor-pointer">
+      <button v-if="sidebarCollapsed && !isMobile" @click="toggleSidebar"
+        class="absolute top-4 p-2 rounded-lg bg-slate-700 hover:bg-emerald-600 transition-all duration-300 hover:scale-105 shadow-lg border border-slate-600 hover:border-emerald-500 z-50 cursor-pointer -right-4">
         <svg class="w-5 h-5 text-white transition-transform duration-300 rotate-180" fill="none" stroke="currentColor"
           viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -52,7 +55,8 @@
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
               active-class="bg-emerald-600 text-white border-emerald-500"
-              exact-active-class="bg-emerald-600 text-white border-emerald-500">
+              exact-active-class="bg-emerald-600 text-white border-emerald-500"
+              @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -64,7 +68,8 @@
                 Dashboard
               </span>
             </RouterLink>
-            <div v-if="sidebarCollapsed"
+            <!-- Desktop tooltip -->
+            <div v-if="sidebarCollapsed && !isMobile"
               class="absolute left-16 top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-slate-600">
               Dashboard
             </div>
@@ -75,7 +80,8 @@
             <RouterLink to="/admin/registration"
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600 text-white border-emerald-500">
+              active-class="bg-emerald-600 text-white border-emerald-500"
+              @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -86,7 +92,8 @@
                 Registration
               </span>
             </RouterLink>
-            <div v-if="sidebarCollapsed"
+            <!-- Desktop tooltip -->
+            <div v-if="sidebarCollapsed && !isMobile"
               class="absolute left-16 top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-slate-600">
               Registration
             </div>
@@ -97,7 +104,8 @@
             <RouterLink to="/admin/settings"
               class="flex items-center text-slate-300 rounded-xl hover:bg-emerald-700 hover:text-white transition-all duration-300 group border border-transparent hover:border-emerald-600"
               :class="sidebarCollapsed ? 'px-3 py-4 justify-center' : 'px-4 py-4'"
-              active-class="bg-emerald-600 text-white border-emerald-500">
+              active-class="bg-emerald-600 text-white border-emerald-500"
+              @click="handleNavClick">
               <div class="relative">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -111,7 +119,8 @@
                 Settings
               </span>
             </RouterLink>
-            <div v-if="sidebarCollapsed"
+            <!-- Desktop tooltip -->
+            <div v-if="sidebarCollapsed && !isMobile"
               class="absolute left-16 top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-slate-600">
               Settings
             </div>
@@ -121,13 +130,28 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <header
-        class="bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg border-emerald-800 flex-shrink-0">
+    <div 
+      class="flex-1 flex flex-col overflow-hidden"
+      :class="getMainContentClasses()">
+      
+      <header class="bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg border-emerald-800 flex-shrink-0">
         <div class="px-6 py-3 flex items-center justify-between">
-          <h2 class="text-2xl font-bold text-white tracking-wide">
-            {{ pageTitle }}
-          </h2>
+          <div class="flex items-center space-x-4">
+            <!-- Mobile hamburger menu -->
+            <button 
+              v-if="isMobile && sidebarCollapsed" 
+              @click="openSidebar"
+              class="p-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+            
+            <h2 class="text-2xl font-bold text-white tracking-wide">
+              {{ pageTitle }}
+            </h2>
+          </div>
+          
           <!-- User profile -->
           <div class="relative" ref="dropdownRef">
             <button @click="toggleDropdown"
@@ -175,7 +199,7 @@
         </div>
       </header>
 
-      <!-- Page Content - Full height content area -->
+      <!-- Page Content -->
       <main class="flex-1 overflow-y-auto">
         <div class="h-full">
           <div class="bg-white h-full">
@@ -200,6 +224,55 @@ const route = useRoute()
 const sidebarCollapsed = ref(false)
 const dropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
+const isMobile = ref(false)
+
+// Check if screen is mobile size
+const checkMobile = () => {
+  const wasMobile = isMobile.value
+  isMobile.value = window.innerWidth < 768
+  
+  // If switching to mobile
+  if (!wasMobile && isMobile.value) {
+    sidebarCollapsed.value = true
+  }
+}
+
+const getSidebarClasses = () => {
+  const baseClasses = []
+  
+  if (sidebarCollapsed.value) {
+    baseClasses.push('w-16')
+  } else {
+    baseClasses.push('w-64')
+  }
+  
+  if (isMobile.value) {
+    baseClasses.push('fixed', 'top-0', 'left-0', 'h-full')
+  } else {
+    baseClasses.push('flex-shrink-0', 'relative')
+  }
+  
+  return baseClasses.join(' ')
+}
+
+// Get main content classes based on state
+const getMainContentClasses = () => {
+  const baseClasses = []
+  
+  if (isMobile.value && sidebarCollapsed.value) {
+    baseClasses.push('ml-16')
+  }
+  
+  return baseClasses.join(' ')
+}
+
+const openSidebar = () => {
+  sidebarCollapsed.value = false
+}
+
+const closeSidebar = () => {
+  sidebarCollapsed.value = true
+}
 
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
@@ -207,6 +280,15 @@ const toggleSidebar = () => {
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
+}
+
+// Handle navigation clicks on mobile
+const handleNavClick = () => {
+  if (isMobile.value && !sidebarCollapsed.value) {
+    setTimeout(() => {
+      closeSidebar()
+    }, 150)
+  }
 }
 
 const handleLogout = async () => {
@@ -221,11 +303,15 @@ const handleClickOutside = (event: Event) => {
   }
 }
 
+// Initialize
 onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
   document.removeEventListener('click', handleClickOutside)
 })
 
