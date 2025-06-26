@@ -3,7 +3,7 @@
 Frontend Registration
 
 ## Live Website
-https://example.com/
+https://amc.danwardbautista.com/
 
 ## Prerequisite
 1. Node JS Stable Version
