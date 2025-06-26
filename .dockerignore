@@ -1,0 +1,37 @@
+# Don't copy node_modules - install fresh
+node_modules
+npm-debug.log*
+
+# Build output
+dist
+
+# Local env files only
+.env.local
+.env.development
+.env.test
+
+# Editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git stuff
+.git
+.gitignore
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Logs and temp files
+logs
+*.log
+coverage
+*.tmp
+*.temp
