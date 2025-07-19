@@ -133,18 +133,40 @@
       <header class="bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg border-emerald-800 flex-shrink-0">
         <div class="px-6 py-3 flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <!-- Mobile hamburger menu -->
-            <button v-if="isMobile && sidebarCollapsed" @click="openSidebar"
-              class="p-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
-                </path>
-              </svg>
-            </button>
+            <!-- Mobile hamburger menu with consistent spacing -->
+            <div v-if="isMobile" class="w-10 h-10 flex items-center justify-center">
+              <button v-if="sidebarCollapsed" @click="openSidebar"
+                class="p-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                  </path>
+                </svg>
+              </button>
+            </div>
 
-            <h2 class="text-2xl font-bold text-white tracking-wide">
-              {{ pageTitle }}
-            </h2>
+            <!-- Desktop: no spacer needed -->
+            <div class="flex items-center space-x-3">
+              <h2 class="text-2xl font-bold text-white tracking-wide">
+                {{ pageTitle }}
+              </h2>
+              <!-- Refresh button for registration page -->
+              <button 
+                v-if="route.name === 'registration'"
+                @click="refreshPage"
+                class="p-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer group"
+                title="Refresh page">
+                <svg class="w-5 h-5 text-white group-hover:rotate-180 transition-transform duration-300" 
+                     fill="none" 
+                     stroke="currentColor" 
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                  </path>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- User profile -->
@@ -238,13 +260,19 @@ const getSidebarClasses = () => {
   const baseClasses = []
 
   if (sidebarCollapsed.value) {
-    baseClasses.push('w-16')
+    if (isMobile.value) {
+      // On mobile when collapsed, hide completely off-screen
+      baseClasses.push('w-64', '-translate-x-full')
+    } else {
+      // On desktop when collapsed, show narrow sidebar
+      baseClasses.push('w-16')
+    }
   } else {
     baseClasses.push('w-64')
   }
 
   if (isMobile.value) {
-    baseClasses.push('fixed', 'top-0', 'left-0', 'h-full')
+    baseClasses.push('fixed', 'top-0', 'left-0', 'h-full', 'transform', 'transition-transform', 'duration-300')
   } else {
     baseClasses.push('flex-shrink-0', 'relative')
   }
@@ -254,13 +282,7 @@ const getSidebarClasses = () => {
 
 // Get main content classes based on state
 const getMainContentClasses = () => {
-  const baseClasses = []
-
-  if (isMobile.value && sidebarCollapsed.value) {
-    baseClasses.push('ml-16')
-  }
-
-  return baseClasses.join(' ')
+  return ''
 }
 
 const openSidebar = () => {
@@ -292,6 +314,10 @@ const handleLogout = async () => {
   dropdownOpen.value = false
   await auth.logout()
   router.push({ name: 'login' })
+}
+
+const refreshPage = () => {
+  window.location.reload()
 }
 
 const handleClickOutside = (event: Event) => {
